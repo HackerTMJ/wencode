@@ -212,8 +212,8 @@ describe('Integration: WenCode Compilation Pipeline', () => {
       `);
 
       // Check for indentation
-      expect(result).toMatch(/\n  let/); // 2-space indent
-      expect(result).toMatch(/\n  if/); // 2-space indent
+      expect(result).toMatch(/\n {2}let/); // 2-space indent
+      expect(result).toMatch(/\n {2}if/); // 2-space indent
     });
 
     it('should have newlines between statements', () => {
