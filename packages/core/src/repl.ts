@@ -16,7 +16,7 @@ export class REPL {
 
   constructor() {
     this.tokenizer = new Tokenizer('');
-    this.parser = new Parser();
+    this.parser = new Parser([]);
     this.transpiler = new Transpiler();
   }
 
@@ -101,7 +101,8 @@ export class REPL {
       const tokens = this.tokenizer.tokenize();
 
       // 步骤 2：语法分析
-      const ast = this.parser.parse(tokens);
+      this.parser = new Parser(tokens);
+      const ast = this.parser.parse();
 
       // 步骤 3：代码转译
       const jsCode = this.transpiler.transpile(ast);
@@ -122,8 +123,8 @@ export class REPL {
    * 评估并执行 JavaScript 代码
    */
   private evaluateCode(jsCode: string): unknown {
-    const func = new Function(jsCode);
-    return func();
+    const func = new Function('输出', jsCode);
+    return func(console.log);
   }
 
   /**
