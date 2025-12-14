@@ -416,10 +416,36 @@ export class Tokenizer {
   }
 
   /**
+   * Normalize Chinese punctuation to English equivalents
+   */
+  private normalizePunctuation(char: string): string {
+    const punctuationMap: Record<string, string> = {
+      '。': '.',  // Chinese period to period
+      '，': ',',  // Chinese comma to comma
+      '；': ';',  // Chinese semicolon to semicolon
+      '：': ':',  // Chinese colon to colon
+      '（': '(',  // Chinese open paren to paren
+      '）': ')',  // Chinese close paren to paren
+      '【': '[',  // Chinese square bracket open
+      '】': ']',  // Chinese square bracket close
+      '｛': '{',  // Chinese curly brace open
+      '｝': '}',  // Chinese curly brace close
+      '！': '!',  // Chinese exclamation
+      '？': '?',  // Chinese question mark
+      '·': ',',   // Chinese middle dot to comma
+      '、': ',',  // Chinese enumeration comma to comma
+    };
+    return punctuationMap[char] || char;
+  }
+
+  /**
    * Get token type for two-character operator
    */
   private getTwoCharOperatorType(op: string): TokenType | null {
-    switch (op) {
+    // Normalize Chinese punctuation in operators
+    const normalized = this.normalizePunctuation(op[0]) + this.normalizePunctuation(op[1]);
+    
+    switch (normalized) {
       case '==':
         return TokenType.EQUALS;
       case '!=':
@@ -459,7 +485,10 @@ export class Tokenizer {
    * Get token type for single-character token
    */
   private getSingleCharTokenType(char: string): TokenType | null {
-    switch (char) {
+    // Normalize Chinese punctuation
+    const normalized = this.normalizePunctuation(char);
+    
+    switch (normalized) {
       case '+':
         return TokenType.PLUS;
       case '-':
